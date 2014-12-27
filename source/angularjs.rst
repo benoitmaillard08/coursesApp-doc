@@ -1,3 +1,3 @@
 ==================
-Qu'est qu'AngularJS ?
+AngularJS
 ==================
