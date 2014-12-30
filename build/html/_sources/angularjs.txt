@@ -52,7 +52,7 @@ Avec AngularJS, le modèle est légérement différent. En effet il y a ce qu'on
         <body>
     <html>
 
-A l'instar de Django, les doubles accolades signifient qu'on veut executer du code Angular/Javascript à l'intérieur. Ici on affiche simple une variable, mais on pourrait également faire un calcul et afficher le résultat: ``{{ 1 + 2 }}``.
+A l'instar de Django, les doubles accolades signifient qu'on veut exécuter du code Angular/Javascript à l'intérieur. Ici on affiche simple une variable, mais on pourrait également faire un calcul et afficher le résultat: ``{{ 1 + 2 }}``.
 
 Comme précédement, on a assigné une variable avec tous les articles, par contre cette fois la boucle se fait directement en utilisant la directive qui se confond avec la syntaxe HTML. A l'intérieur de l'attribut, il faut utiliser la syntaxe Angular pour faire les boucles ``article in articles``, on lui dit ici de parcourir la variable articles et d'utiliser comme variable temporaire ``article`` pour chaque article parcouru. Il existe beaucoup d'autre directives dans avec AngularJS pour réagir au click d'une souris sur un élément, pour afficher ou cacher des parties, tout ce qui concerne les fonctionnalités des formulaires, etc. Il est aussi possible de créer des propres directives personnalisées avec le comportement désiré. Créer ses propres directives permet soit d'avoir un code plus clair soit d'éviter la répétion, dans les deux cas cette fonctionnalité est très utile et puissante. 
 
@@ -61,3 +61,43 @@ C'est à cause de ces directives qu'on parle d'HTML expressif car en effet avec 
 **********************
 Two-way data binding
 **********************
+
+La deuxième fonctionnalité majeur d'AngularJS est ce qu'on appelle two-way data binding ou en français la liaison des données à double sens. Derrière cette mystérieuse phrase ce cache la manière que le framework utilise pour relier le modèle et la vue, ou reformulé, les données de l'application et ce que voit et entre l'utilisateur. Le système habituel est comme suit: on génère les vues en fonction de ce qui se trouve dans le modèle, comme dans l'exemple précédent où ou on cherche des articles dans la BD pour ensuite générer une page. Ensuite si on change le modèle, on ajoute un article par exemple, la vue ne se met pas à jour, on doit la rendre à nouveau pour voir les changements. Ou encore si l'utilisateur fait un changement dans la page, il remplit un formulaire pour ajouter un nouvelle article et l'envoie, le modèle a changé mais la page n'est pas mise à jour. On appelle ce sytème logiquement one-way data binding. Avec Angular le principe est plus intelligent, les vues se génèrent effectivement en fonction des modèles, par contre si le développeur change le modèle, la vue se mettra automatiquement à jour et c'est pareil si un utilisateur fait un changement dans la vue, le modèle se changera également. Les deux entitiés sont toujours syncronisé grâce au mécanisme du framework. Cette fonctionnalié facilitent énormément la vie du développeur. Imaginez un système de commentaire par exemple. Il y a une liste de commentaire et un formulaire pour en ajouter un. Pour le développeur il suffit de relier le formulaire au modèle - je n'entre pas dans les détails de la programmation - et ensuite au fur et à mesure que l'utilisateur tape son commentaire, le modèle contient déjà le commentaire partiel en question et il peut déjà s'afficher dans la liste. On peut aussi imaginé un bouton qui affiche ou cache une section: d'abord on affiche une section selon une variable booléenne ``affiche`` et on assigne par défaut à la variable ``false``. En ensuite on a plus qu'à assigné au bouton une fonction que change la valeur de notre variable ``affiche`` de ``false`` à ``true`` et vice-versa et la section s'affichera ou se cachera selon. Je met l'exemple complet ci-dessous pour donner une idée d'un code AngularJS.
+
+.. code-block:: html
+
+    <html ng-app="DemoApp">
+        <head></head>
+        <body ng-controller="IndexController">
+            <div ng-show="affiche">
+               <h1>Je suis une section cachée !</h1>
+               <p>Mais je ne cache rien d'intéressant...<p>
+            </div>
+            <button type="button" ng-click="toggle()">Afficher/Cacher</button>
+        <body>
+    <html>
+
+.. code-block:: javascript
+    
+    // On crée une application Angular
+    var app = angular.module("DemoApp");
+
+    // On crée un controlleur Angular
+    app.controller("IndexController", function($scope) {
+
+        $scope.affiche = false;
+
+        $scope.toggle = function() {
+            $scope.affiche = !$scope.affiche
+        };
+
+    };)
+
+Remarquez l'utilisation des directives: ``ng-app`` signale à AngularJS qu'il faut analyser et compiler cette page, ``ng-controller`` signale qu'il faut utiliser le controlleur ``IndexController`` définit dans le code JavaScript et donc d'éxécuter ce qui se trouve à l'intérieur, ``ng-show`` montre ou non la section selon la contenu de la variable booléenne ``affiche`` et ``ng-click`` exécute la fonction ``toggle()`` lorsque qu'on clique sur le bouton.
+
+******************
+Et plus encore...
+******************
+
+Il y a évidemment encore d'autres avantages à utiliser ce framework, notament les injections et l'extensibilité d'AngularJS, mais nous avons vu les deux principales différences dans le monde des frameworks JavaScript.
+
