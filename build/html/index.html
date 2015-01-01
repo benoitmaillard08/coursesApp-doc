@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Développer avec AngularJS &mdash; TM2014: Développer avec AngularJS 0.1 documentation</title>
+    <title>Développer avec AngularJS &mdash; Module de cours: guide</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,8 +23,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="TM2014: Développer avec AngularJS 0.1 documentation" href="#" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Module de cours: guide" href="#" />
     <link rel="next" title="AngularJS" href="angularjs.html" /> 
   </head>
   <body>
@@ -32,12 +34,12 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="genindex.html" title="Index général"
              accesskey="I">index</a></li>
         <li class="right" >
           <a href="angularjs.html" title="AngularJS"
-             accesskey="N">next</a> |</li>
-        <li><a href="#">TM2014: Développer avec AngularJS 0.1 documentation</a> &raquo;</li> 
+             accesskey="N">suivant</a> |</li>
+        <li><a href="#">Module de cours: guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -47,7 +49,7 @@
           <div class="body">
             
   <div class="section" id="developper-avec-angularjs">
-<h1>Développer avec AngularJS<a class="headerlink" href="#developper-avec-angularjs" title="Permalink to this headline">¶</a></h1>
+<h1>Développer avec AngularJS<a class="headerlink" href="#developper-avec-angularjs" title="Lien permanent vers ce titre">¶</a></h1>
 <p>Contenu:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -61,7 +63,11 @@
 <li class="toctree-l2"><a class="reference internal" href="functionalities.html#les-etudiants">Les étudiants</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="models.html">Modèle relationnel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Modèle relationnel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#les-cours">Les cours</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="restless.html">RestLess</a></li>
 <li class="toctree-l1"><a class="reference internal" href="maths.html">Affichage des mathématiques</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Guide du développeur</a></li>
@@ -69,11 +75,11 @@
 </div>
 </div>
 <div class="section" id="indices-et-tables">
-<h1>Indices et tables<a class="headerlink" href="#indices-et-tables" title="Permalink to this headline">¶</a></h1>
+<h1>Indices et tables<a class="headerlink" href="#indices-et-tables" title="Lien permanent vers ce titre">¶</a></h1>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Index du module</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Page de recherche</em></a></li>
 </ul>
 </div>
 
@@ -83,22 +89,22 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
+  <h3><a href="#">Table des Matières</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Développer avec AngularJS</a></li>
 <li><a class="reference internal" href="#indices-et-tables">Indices et tables</a></li>
 </ul>
 
-  <h4>Next topic</h4>
+  <h4>Sujet suivant</h4>
   <p class="topless"><a href="angularjs.html"
-                        title="next chapter">AngularJS</a></p>
-  <h3>This Page</h3>
+                        title="Chapitre suivant">AngularJS</a></p>
+  <h3>Cette page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
+           rel="nofollow">Montrer la source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+  <h3>Recherche rapide</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -106,7 +112,7 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+    Saisissez un mot clef ou un nom de module, classe ou fonction.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
@@ -118,17 +124,17 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="genindex.html" title="Index général"
              >index</a></li>
         <li class="right" >
           <a href="angularjs.html" title="AngularJS"
-             >next</a> |</li>
-        <li><a href="#">TM2014: Développer avec AngularJS 0.1 documentation</a> &raquo;</li> 
+             >suivant</a> |</li>
+        <li><a href="#">Module de cours: guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014, Keran Kocher.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

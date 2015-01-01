@@ -53,7 +53,7 @@ Par défaut, le cours créé par un professeur n'est pas visible par les utilisa
 Editer son cours
 ================
 
-Dans son dashboard, le professeur voit tous les cours qu'il a crées. S'il clique sur le bouton éditer d'un de ceux-là, il retournera sur l'interface d'édition de son cours pour pouvoir y apporter les modifications désirées.
+Dans son dashboard, le professeur voit tous les cours qu'il a créés. S'il clique sur le bouton éditer d'un de ceux-là, il retournera sur l'interface d'édition de son cours pour pouvoir y apporter les modifications désirées.
 
 ##############
 Les étudiants
