@@ -32,7 +32,7 @@ La structure
 
     Le schema de toutes les tables du modèle relationnel
 
-Le fait que la structure des tables relationnelles reflètent la structure que perçoit le rédacteur facilitent grandement la compréhension. Nous avons vu qu'un cours de compose de plusieurs pages, qui elles-mêmes contiennent plusieurs sections avec un titre et un contenu et que l'auteur pouvait ajouter ou retirer des éléments à sa guise. C'est exactement la même chose dans le modèle. Tout d'abord on trouve une tables ``courses`` qui contient les informations de base qu'entre le professeur au début du processus et qui sont les colonnes suivantes: ``name``, ``description``, ``difficulty``, il reste le champs ``chaptitre`` que nous verrons plus tard. Ensuite il y a la table ``pages`` avec les colonnes ``name`` qui est le titre de la page et ``course_id`` qui signale la relation avec le cours. En effet chaque page appartient à un cours et vice-versa un cours possède donc plusieurs page, grâce à la clé étrangère - champs qui contient l'ID, l'identifiant d'un enregistrement d'une autre table - ``course_id`` qui relie les deux tables. L'utilisation plus précise de la relation est expliqué dans la partie suivante. Finalement pour terminer l'ensemble il reste la table ``sections`` qui a les colonnes ``name``, ``content`` et ``page_id``, un titre, un contenu et à l'instar des pages une clé étrangère qui la relie à une page. Donc une section appartient à une page et une page a plusieurs sections. Pour résumé les relations, un cours a plusieurs pages et chacune de ses pages a plusieurs sections. Comme dit précédement on comprend facilement les relations en observant comment les tables sont implémentés dans l'interface de rédaction d'un cours.
+Le fait que la structure des tables relationnelles reflètent la structure que perçoit le rédacteur facilitent grandement la compréhension. Nous avons vu qu'un cours de compose de plusieurs pages, qui elles-mêmes contiennent plusieurs sections avec un titre et un contenu et que l'auteur pouvait ajouter ou retirer des éléments à sa guise. C'est exactement la même chose dans le modèle. Tout d'abord on trouve une tables ``courses`` qui contient les informations de base qu'entre le professeur au début du processus et qui sont les colonnes suivantes: ``name``, ``description``, ``difficulty``, il reste le champs ``chaptitre`` que nous verrons plus tard. Ensuite il y a la table ``pages`` avec les colonnes ``name`` qui est le titre de la page, ``order`` qui est un nombre qui permet de trier les pages d'un cours entre elles et de permettre de rérganiser l'ordre et ``course_id`` qui signale la relation avec le cours. En effet chaque page appartient à un cours et vice-versa un cours possède donc plusieurs page, grâce à la clé étrangère - champs qui contient l'ID, l'identifiant d'un enregistrement d'une autre table - ``course_id`` qui relie les deux tables. L'utilisation plus précise de la relation est expliqué dans la partie suivante. Finalement pour terminer l'ensemble il reste la table ``sections`` qui a les colonnes ``name``, ``content``, ``order`` et ``page_id``, un titre, un contenu, et à l'instar des pages un order et une clé étrangère qui la relie à une page. Donc une section appartient à une page et une page a plusieurs sections. A noter que ces trois tables possèdent également les champs ``created_at`` et ``updated_at`` qui enregistrent la date et l'heure de la création et la dernière mise à jour de l'entité. Pour résumé les relations, un cours a plusieurs pages et chacune de ses pages a plusieurs sections. Comme dit précédement on comprend facilement les relations en observant comment les tables sont implémentés dans l'interface de rédaction d'un cours.
 
 .. figure:: images/schema_cours.png
     :scale: 80%
@@ -45,9 +45,9 @@ Le fait que la structure des tables relationnelles reflètent la structure que p
 Utilisation
 ***********
 
-Tous les examples d'opérations sur la base de données sont d'abord écrit avec les méthodes de Django puis en SQL pur. Une des particularités de Django quant il s'agit de sauvegarder des objets dans la base de données est qu'il fait appelle à des formulaires, écrit dans le code sous forme de ....Form, comme CourseForm par exemple. On utilise ces mêmes formulaires dans les vues pour générer les formulaires que complètent les utilisateurs, comme pour s'inscrire sur le site. Ils permettent en fait simplement de relier les données soumises par les utilisateurs à nos modèles Django (je rappelle que les modèles sont dans Django la représentation de nos tables de la BD) et par conséquent de créer ou mettre à jour des enregistrements.
+Tous les examples d'opérations sur la base de données sont d'abord écrit avec les méthodes de Django puis en SQL pur. Une des particularités de Django quant il s'agit de sauvegarder des objets dans la base de données est qu'il fait appelle à des formulaires, nommé dans le code sous forme de ....Form, comme CourseForm par exemple. On utilise ces mêmes formulaires dans les vues pour générer les formulaires HTML que complètent les utilisateurs, comme pour s'inscrire sur le site. Ils permettent en fait de simplement relier les données soumises par les utilisateurs à nos modèles Django (je rappelle que les modèles sont dans Django la représentation de nos tables de la BD) et par conséquent de créer ou mettre à jour des enregistrements via des formulaires HTML. Pour bien se représenter le concept, lorsqu'un utilisateur soumet un formulaire, le navigateur envoie les données au serveur sous la forme d'un dictionnaire qui ressemble à cela: {"titre" : "La géométrie", "description" : "Bla bla"}. On récupère ensuite dans le code ce dictionnaire et on enregistre les données dans la BD.
 
-Chercher tous les cours afin de créer une liste de liens pour pouvoir les consulter
+Récupère tous les cours afin de créer une liste avec un lien pour pouvoir se rendre sur le page de lecture d'un cours.
 
 .. code-block:: python
 
@@ -62,7 +62,7 @@ Créer un nouveau cours. On crée d'abord le cours, puis une page associée cont
 .. code-block:: python
     
     # on utilise un formulaire
-    # request.data est un dictionnaire contenant les données soumise par un utilisateur
+    # request.data est un dictionnaire contenant les données soumise par un utilisateur: ici les informations du cours
     course_form = CourseForm(request.data)
     if course_form.is_valid():
         # on crée le cours
@@ -74,5 +74,68 @@ Créer un nouveau cours. On crée d'abord le cours, puis une page associée cont
         page.sections.create(name="Première section", order=1)
 
 .. code-block:: sql
+    
+    -- on crée le cours
+    INSERT INTO courses (name, description, difficulty, author_id, chapter_id, created_at, updated_at) VALUES ("L'algèbre", "Lorem ipsum...", 1, 1, 1, *, *)
+    -- => ID du cours = 1
+    -- On crée la page associée
+    INSERT INTO pages (name, order, course_id, created_at, updated_at) VALUES ("Première page", 1, 1, *, *)
+    -- => ID de la page = 1
+    -- on crée une section associée à la page
+    INSERT INTO sections (name, content, order, course_id, created_at, updated_at) VALUES ("Première section", "", 1, 1, *, *)
 
-    SELECT * FROM courses
+Mettre à jour le contenu d'une page d'un cours. Le titre de la page, le titre et le contenu des sections vont être sauvegardé. Pour accomplir cela on commence par simplement enregistrer la page avec les nouvelles données par la même procédure que pour la création d'un cours. Remarquez simplement dans ``page_form = PageForm(request.data, instance=page)`` qu'on passe en paramètre la page provenant de la base de données pour signaler à Django que l'enregistrement existe déjà et que par conséquent il faut non pas le créer mais le mettre à jour. Pour les sections, on itère le dictionnaire qui contient les données de toutes les sections de la page et ensuite pour chaque section on accomplit la même procédure que pour une page.
+
+.. code-block:: python
+    
+    # Récupère la page à editer
+    page = Page.objects.get(id=page_id)
+    # On utilise un formulaire
+    # request.data est un dictionnaire contenant les données soumise par un utilisateur: ici le contenu de la page
+    page_form = PageForm(request.data, instance=page)
+    if page_form.is_valid():
+        # On enregistre la page - sauvegarde le titre
+        page_form.save()
+    # On récupère le dictionnaire contenant seulement les sections
+    sections_params = request.data['sections']
+    # On fait une boucle pour chaque section
+    for section_params in sections_params:
+        # On récupère la section
+        section = Section.objects.get(id=section_params['id'])
+        # On utilise un formulaire
+        # section_params est un dictionnaire contenant le titre et le contenu de la section
+        section_form = SectionForm(section_params, instance=section)
+        if section_form.is_valid():
+            # On enregistre la section
+            section_form.save()
+
+.. code-block:: sql
+    
+    -- Récupère la page à editer
+    SELECT * FROM pages WHERE id = page_id
+    -- On enregistre la page
+    UPDATE pages SET name = "Nouveau titre" WHERE id = 1
+    -- On enregistre la section
+    UPDATE sections SET name = "Nouveau titre", "content" = "Lorem ispum" WHERE id = 1
+
+##############
+Les chapitres
+##############
+
+Pour pouvoir organiser le contenu du site, cours, exercices, quiz, est toujours associé à un chapitre. Deux tables servent à cette objectif. Tout d'abord la table ``themes`` avec un champs ``name`` et la table ``chapters`` avec un champs ``name`` et ``theme_id`` qui associe chaque thème à un chapitre. Ensuite les tables comme ``courses`` ont un champs ``chapter_id`` qui les relient à un chapitre et donc à un thème aussi. On peut légitement se demander pourquoi ces deux niveaux, ces deux tables ? Cela laisse une plus grande souplesse et liberté pour organiser le contenu et l'afficher. En effet imaginons qu'il y ait 10, 20, 30 ou plus chapitres, comment s'y retrouver ? On les regroupe sous une idée plus générale, et c'est là le rôle de la table ``themes``.    
+
+#################
+Les commentaires
+#################
+
+###############
+La progression
+###############
+
+############
+Les favoris
+############
+
+#############
+Les demandes
+#############
