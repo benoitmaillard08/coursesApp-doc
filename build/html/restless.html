@@ -54,6 +54,69 @@
             
   <div class="section" id="restless">
 <h1>RestLess<a class="headerlink" href="#restless" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="presentation">
+<h2>Présentation<a class="headerlink" href="#presentation" title="Lien permanent vers ce titre">¶</a></h2>
+<p><a class="reference external" href="https://github.com/dobarkod/django-restless">RestLess</a> est un set d&#8217;outils permettant de faciliter l&#8217;implémentation d&#8217;une API JSON dans Django. Il a l&#8217;avatange d&#8217;être léger et facile à utiliser comme nous le verrons par la suite. Une API - Application Programming Interface - est basiquement une application qui offre des services accessible par une autre application et le JSON est un format de données dans le style d&#8217;un dictionnaire <tt class="docutils literal"><span class="pre">{&quot;nom&quot;</span> <span class="pre">:</span> <span class="pre">&quot;Keran&quot;,</span> <span class="pre">&quot;prenom&quot;</span> <span class="pre">:</span> <span class="pre">&quot;Kocher&quot;}</span></tt>. On appelle donc une API JSON, une application qui fournit des données en format JSON. Concrétement il s&#8217;agit d&#8217;une série d&#8217;URLs qui fournissent le contenu de différentes tables de la BD en format JSON. Quand on se rend sur une de ces URLs, on ne voit pas une page HTML comme on a l&#8217;habitude de voir, mais simplement le dictionnaire de données affiché. Sur notre site web rendez-vous sur <a class="reference external" href="http://webmath.com/courses/api/themes">http://webmath.com/courses/api/themes</a> pour voir à quoi cela ressemble.</p>
+<p>Dans la présentation concernant AngularJS, nous avons vu que le framework n&#8217;était pas capable de communiquer directement avec une base de données, c&#8217;est une limitation de JavaScript, qui s&#8217;exécute côté client - sur l&#8217;ordinateur de l&#8217;utilisateur, opposé de côté serveur - dans notre cas. Pour palier ce problème on utilise donc un language intermédiaire qui est capable de communiquer avec une BD et qui s&#8217;exécute côté serveur, c&#8217;est le cas de Python et son framework Django. Django va donc chercher les données dans la BD, les transforme en format JSON puis les sert. Il suffit ensuite pour AngularJS d&#8217;accéder à la bonne URL et elle dispose ensuite des données qu&#8217;on peut utiliser à notre guise.</p>
+<div class="section" id="les-vues-generiques">
+<h3>Les vues génériques<a class="headerlink" href="#les-vues-generiques" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Quand on développe une application pour web, il arrive souvent d&#8217;avoir du code redondant, répétitif. En effet quand on crée des fonctionnalités, il s&#8217;agit souvent d&#8217;avoir une table dans la base de données puis d&#8217;interréagir avec celle-ci ensuite pour modifer les données. Et ces interractions sont généralement toujours les mêmes, on parle généralement du CRUD: create, read, update and delete ou en français créer, lire, mettre à jour et supprimer. On aura donc une table et on voudra accomplir les opérations CRUD dessus et pour ce faire on aura une série d&#8217;URLs et d&#8217;actions derrières. Prenons l&#8217;exemple de la création d&#8217;un blog tout à fait typique: on va créer une table <tt class="docutils literal"><span class="pre">articles</span></tt> et on va implémenter les actions suivantes: on veut pourvoir afficher tous les articles ou pouvoir en afficher un seul - read, ajouter un nouvel article - create, le mettre à jour - update - ou le supprimer - delete. Et voilà, avec ces 4 opérations on peut disposer d&#8217;un blog complet et fonctionnel. Et pour beaucoup de fonctionnalité il s&#8217;agira d&#8217;effectuer toujours ces mêmes opérations classiques, imaginez par exemple un système de commentaires ou alors d&#8217;événements. Pour programmer ces outils basiques et conventionnels deux moyens sont à notre disposition dans Django. Soit on programme de A à Z les opérations, avec Django il s&#8217;agit basiquement de créer une URL et lui assigner une fonction qui retourne du code HTML et qui s&#8217;occupe de communiquer avec la base de données. Si on utilise cette méthode, on risque de devoir programmer souvent le même code au fil du développement et de perdre du temps. Ci-dessous le code pour afficher tous les articles avec la méthode normale.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># url.py - fichier qui gère les URLs du site</span>
+
+<span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">include</span>
+
+<span class="kn">from</span> <span class="nn">courses</span> <span class="kn">import</span> <span class="n">views</span>
+
+<span class="c"># on crée une URL /articles qui utilise la fonction index - voir fichier views.py</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^articles$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c"># views.py - fichier qui contient les fonctions liées aux URLs</span>
+
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+
+<span class="c"># fonction reliée à /articles</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># Récupère tous les articles de la BD (fait appelle au modèle Article)</span>
+    <span class="n">articles</span> <span class="o">=</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="c"># Retourne le code HTML en utilisant le ficher courses.html</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;courses/courses.html&quot;</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>La deuxième méthode consiste à utiliser les vues génériques. Ce sont en effet des classes que Django possède contenant déjà les opérations conventionnelles déjà écrites. Il nous suffit donc de créer notre propre classe qui hérite des classes Django, des vues génériques et d&#8217;ensuite la relier à notre URL comme on le faisait avec la fonction. Pourquoi créer une classe et ne pas utiliser directement les classes Django ? Tout simplement pour pouvoir personnaliser la classe. Il faut déjà obligatoirement spécifier le modèle que doit utiliser la classe par exemple pour savoir quelles enregistremens elle doit aller récupérer. Voici donc la même fonctionnalité qu&#8217;avant mais avec les vues génériques.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># url.py - fichier qui gère les URLs du site</span>
+
+<span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">include</span>
+
+<span class="kn">from</span> <span class="nn">courses.views</span> <span class="kn">import</span> <span class="n">ArticlesList</span>
+
+<span class="c"># on crée une URL /articles qui utilise la vue générique ArticlesList - voir fichier views.py</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^articles$&#39;</span><span class="p">,</span> <span class="n">ArticlesList</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+<span class="p">)</span>
+
+<span class="c"># views.py - fichier qui contient les fonctions liées aux URLs</span>
+
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">ListView</span>
+
+<span class="c"># la classe générique reliée à /articles</span>
+<span class="k">class</span> <span class="nc">ArticlesList</span><span class="p">(</span><span class="n">ListView</span><span class="p">):</span>
+
+    <span class="c"># on spécifie le modèle à utiliser</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Article</span>
+</pre></div>
+</div>
+<p>Avec la seconde méthode le code est plus concis. L&#8217;exemple montre comment générer une liste d&#8217;articles, mais il existe une classe pour chaque opération du CRUD. Il est encore possible de personnaliser notre classe <tt class="docutils literal"><span class="pre">ArticlesList</span></tt> avec des options ou en surchargeant les méthodes. Par contre évidement que si notre fonctionnilité a des besoins spécifiques qui s&#8217;éloignent trop de la convention, les vues génériques ne sont plus adaptées car leur personnalisation a évidement des limites. Dans ces cas-ci on retourne à la première méthode.</p>
+</div>
+<div class="section" id="concept-de-restless">
+<h3>Concept de RestLess<a class="headerlink" href="#concept-de-restless" title="Lien permanent vers ce titre">¶</a></h3>
+</div>
+</div>
+<div class="section" id="application">
+<h2>Application<a class="headerlink" href="#application" title="Lien permanent vers ce titre">¶</a></h2>
+</div>
 </div>
 
 
@@ -62,6 +125,19 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">RestLess</a><ul>
+<li><a class="reference internal" href="#presentation">Présentation</a><ul>
+<li><a class="reference internal" href="#les-vues-generiques">Les vues génériques</a></li>
+<li><a class="reference internal" href="#concept-de-restless">Concept de RestLess</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#application">Application</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Sujet précédent</h4>
   <p class="topless"><a href="models.html"
                         title="Chapitre précédent">Modèle relationnel</a></p>
